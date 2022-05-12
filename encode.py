@@ -1,3 +1,4 @@
+from turtle import position
 import numpy as np
 
 def betweenParantheses(str,inting):
@@ -55,7 +56,7 @@ def encode(N,file):
         for j in range(len(edges)):
             if edges[j][0]==i :
                 listAdj[i]+=[(edges[j][1],distance(edges[j][0],edges[j][1],coords))]
-    return listAdj
+    return listAdj, coords[1]
 
 
 
