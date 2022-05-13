@@ -29,6 +29,7 @@ def encode(N,file):
     vertices=[]
     coords=[]
     edges=[]
+    eCount=0
     for i in range(len(str)):
         if str[i][0]=='R' :
             vertices+=['R']
@@ -47,16 +48,25 @@ def encode(N,file):
                 None
     for i in range(len(str)):
         if str[i][0]=='E' :
+            eCount=1
             a,b=betweenParantheses(str[i],False)
             aver = vertices.index(a)
             bver = vertices.index(b)
             edges+=[(aver,bver)]
+    if eCount==0:
+        for i in range(len(vertices)):
+            for j in range(len(vertices)):
+                if i!=j:
+                    edges+=[(i,j)]
     listAdj=[[] for i in range(len(vertices))]
     for i in range(len(vertices)):
         for j in range(len(edges)):
             if edges[j][0]==i :
-                listAdj[i]+=[(edges[j][1],distance(edges[j][0],edges[j][1],coords))]
-    return listAdj, coords[1]
+                listAdj[i]+=[[vertices[edges[j][1]],distance(edges[j][0],edges[j][1],coords)]]
+    return listAdj  
+
+# print(encode(50,"./test.txt"))
+
 
 
 
