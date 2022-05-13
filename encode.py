@@ -53,6 +53,7 @@ def encode(N,file):
             aver = vertices.index(a)
             bver = vertices.index(b)
             edges+=[(aver,bver)]
+            edges+=[(bver,aver)]
     if eCount==0:
         for i in range(len(vertices)):
             for j in range(len(vertices)):
@@ -63,7 +64,7 @@ def encode(N,file):
         for j in range(len(edges)):
             if edges[j][0]==i :
                 listAdj[i]+=[["R% s" % edges[j][1],distance(edges[j][0],edges[j][1],coords)]]
-    return listAdj  
+    return listAdj, coords
 
 print(encode(50,"./test.txt"))
 
