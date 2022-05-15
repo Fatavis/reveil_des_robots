@@ -57,7 +57,7 @@ def separate_point_visited_and_not_visited(G : list, visited_vertices : list, co
     visited_coords = []
     not_visited_coords = []
     for vertice in visited_vertices:
-        visited_coords.append(coords[int(vertice[1])])
+        visited_coords.append(coords[int(vertice[1:])])
     for c in coords:
         if c not in visited_coords:
             not_visited_coords.append(c)
@@ -141,7 +141,7 @@ def calcul_mean(filename : str):
     total_time_mean = 0
     vertice_number_mean = 0
     for k in range(10):
-        total_time, vertice_number = algo_opti(encode(1, file_name)[0], encode(1, file_name)[1])
+        total_time, vertice_number = algo_opti(encode(1, file_name+"_"+str(k)+".txt")[0], encode(1, file_name+"_"+str(k)+".txt")[1])
         total_time_mean += total_time
         vertice_number_mean += vertice_number
     total_time_mean /= 10
@@ -171,7 +171,7 @@ if __name__ == '__main__':
     coords = [[0, 0], [0, 1], [-1, 0], [0, -1], [1000, 0]]
     #G = encode(1, "bigtest.txt")[0]
     #viewer(G, encode(1, "bigtest.txt")[1])
-    file_name = input("Entrer le nom du fichier de données à lire : ")
+    file_name = input("Entrer le nom du fichier de données à lire (sans l'extension .txt): ")
     calcul_mean(file_name)
 
 
