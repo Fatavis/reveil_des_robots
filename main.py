@@ -61,6 +61,7 @@ def separate_point_visited_and_not_visited(G : list, visited_vertices : list, co
     for c in coords:
         if c not in visited_coords:
             not_visited_coords.append(c)
+    print(visited_coords)
     return visited_coords, not_visited_coords
 
 def two_random_points(vertice : int, G : list, target_robots : list, visited_vertices : list):
@@ -75,16 +76,29 @@ def two_random_points(vertice : int, G : list, target_robots : list, visited_ver
     return results
 
 def viewer(G : list, coords : list, memory_visited_vertices : list = None) -> None:
-    # visited_coords, not_visited_coords = separate_point_visited_and_not_visited(G, memory_visited_vertices[k], coords)
     # visited_coords_x = np.array(visited_coords).T[0][:]
     # visited_coords_y = np.array(visited_coords).T[1][:]
     # not_visited_coords_x = np.array(not_visited_coords).T[0][:]
     # not_visited_coords_y = np.array(not_visited_coords).T[1][:]
-    plt.scatter(np.array(coords).T[0][:], np.array(coords).T[1][:])
+    #plt.scatter(np.array(coords).T[0][:], np.array(coords).T[1][:])
 
     # Génération de l'animation, frames précise les arguments numérique reçus par func (ici animate), 
     # interval est la durée d'une image en ms, blit gère la mise à jour
     #ani = animation.FuncAnimation(fig=fig, func=animate, frames=range(1), interval=50, blit=True)
+    #plt.show()
+    fig = plt.figure()
+    x, y = zip(*coords)
+    plt.xlim(min(x)-2,max(x)+2)
+    plt.ylim(min(y)-2,max(y)+2)
+    def animate(i):
+        visited_coords, not_visited_coords = separate_point_visited_and_not_visited(G, memory_visited_vertices[i], coords)
+        visited_coords_x, visited_coords_y = zip(*visited_coords)
+        not_visited_coords_x, not_visited_coords_y = zip(*not_visited_coords)
+        if not_visited_coords:
+            scat2 = plt.scatter(not_visited_coords_x, not_visited_coords_y, color="cyan")
+        scat = plt.scatter(visited_coords_x, visited_coords_y, color="red")
+        return scat, scat2
+    ani = animation.FuncAnimation(fig, animate, frames = len(memory_visited_vertices), repeat = False, interval = 500)
     plt.show()
 
 def algo_opti(G : list, coords : list):
@@ -127,13 +141,12 @@ def algo_opti(G : list, coords : list):
     
     print(heap)
     min_x = np.min(np.array(coords).T[0][:])
-
     # if min_x < 0: 
     #     for coord in coords:
     #         print(coord)
     #         coord[0] -= min_x
 
-    #viewer(G, memory_of_visited_vertices, coords)
+    viewer(G, coords, memory_of_visited_vertices)
     print("sorted vertices")
     print(sorted(visited_vertices))
     print("Le temps total est : ", total_time)
@@ -160,6 +173,6 @@ if __name__ == '__main__':
     coords = [[0, 0], [0, 1], [-1, 0], [0, -1], [1000, 0]]
     #G = encode(1, "bigtest.txt")[0]
     #viewer(G, encode(1, "bigtest.txt")[1])
-    algo_opti(G, coords)
+    algo_opti(encode(1, "test_rapport.txt")[0], encode(1, "test_rapport.txt")[1])
 
 
