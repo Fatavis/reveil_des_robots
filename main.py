@@ -54,11 +54,9 @@ def update_heap(heap, element):
         elt[1] -= element[1]
 
 def separate_point_visited_and_not_visited(G : list, visited_vertices : list, coords : list) -> None:
-    print("New turn")
     visited_coords = []
     not_visited_coords = []
     for vertice in visited_vertices:
-        print(vertice)
         visited_coords.append(coords[int(vertice[1])])
     for c in coords:
         if c not in visited_coords:
@@ -98,6 +96,7 @@ def algo_opti(G : list, coords : list):
     heapq.heapify(heap)
 
     total_time = 0
+    vertice_count = 0
     target_robots = [] #robot vers lesquels on doit se déplacer
     working_robot = [] #robot que l'on doit déplacer
     visited_vertices = [] 
@@ -106,20 +105,22 @@ def algo_opti(G : list, coords : list):
     visited_vertices.append(G[1][0][0])
     close_vertice = get_closer_vertice(start_vertice, G, target_robots, visited_vertices)
     target_robots.append(close_vertice[0])
+    vertice_count += 1
     heapq.heappush(heap, close_vertice)
 
     while (len(visited_vertices) < len(G)):
         memory_of_visited_vertices.append(copy.deepcopy(visited_vertices))
         heap = sorted(heap, key = lambda x: x[1])
         element = heapq.heappop(heap)
+        vertice_count += 1
         target_robots.remove(element[0])
         if not(element[0] in visited_vertices):
             visited_vertices.append(element[0])
         total_time += element[1]
         close_vertice = get_closer_vertice(int(element[0][1:]), G, target_robots, visited_vertices)
         far_vertice = get_far_vertice(int(element[0][1:]), G, target_robots, visited_vertices)
-        print(close_vertice)
-        print(far_vertice)
+        #print(close_vertice)
+        #print(far_vertice)
         if (close_vertice):
             target_robots.append(close_vertice[0])
             heapq.heappush(heap, close_vertice)
@@ -128,11 +129,25 @@ def algo_opti(G : list, coords : list):
                 heapq.heappush(heap, far_vertice)
     
     memory_of_visited_vertices.append(visited_vertices)
-    print(memory_of_visited_vertices)
-    viewer(G, coords, memory_of_visited_vertices)
-    print("sorted vertices")
-    print(sorted(visited_vertices))
+    #print(memory_of_visited_vertices)
+    #viewer(G, coords, memory_of_visited_vertices)
+    #print("sorted vertices")
+    #print(sorted(visited_vertices))
     print("Le temps total est : ", total_time)
+    print("Le nombre de sommets parcourus : ", vertice_count)
+    return total_time, vertice_count
+
+def calcul_mean(filename : str):
+    total_time_mean = 0
+    vertice_number_mean = 0
+    for k in range(10):
+        total_time, vertice_number = algo_opti(encode(1, file_name)[0], encode(1, file_name)[1])
+        total_time_mean += total_time
+        vertice_number_mean += vertice_number
+    total_time_mean /= 10
+    vertice_number_mean /= 10
+    print("Le temps moyen sur 10 itérations est de : ", total_time)
+    print("Le nombre de sommets sur 10 itérations est de : ", vertice_number_mean)
 
 if __name__ == '__main__':
     A = [["R1", 1], ["R2", 1], ["R3", 1], ["R4", 1000]]
@@ -156,6 +171,7 @@ if __name__ == '__main__':
     coords = [[0, 0], [0, 1], [-1, 0], [0, -1], [1000, 0]]
     #G = encode(1, "bigtest.txt")[0]
     #viewer(G, encode(1, "bigtest.txt")[1])
-    algo_opti(encode(1, "test_rapport.txt")[0], encode(1, "test_rapport.txt")[1])
+    file_name = input("Entrer le nom du fichier de données à lire : ")
+    calcul_mean(file_name)
 
 
