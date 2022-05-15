@@ -6,7 +6,7 @@ K = int(input("Valeur de K : "))
 N = int(input("Valeur de N : "))
 
 possible_coords = [[i,j] for i in range(1, N+1) for j in range(1, N+1)]
-coords = random.sample(possible_coords, K)
+coords = random.sample(possible_coords, K+1)
 
 myfile = Path(name_file+".txt")
 myfile.touch(exist_ok=True)
