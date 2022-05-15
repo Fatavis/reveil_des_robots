@@ -66,7 +66,7 @@ def encode(N,file):
                 listAdj[i]+=[["R% s" % edges[j][1],distance(edges[j][0],edges[j][1],coords)]]
     return listAdj, coords
 
-print(encode(50,"./test.txt"))
+# print(encode(50,"./test.txt"))
 
 
 
