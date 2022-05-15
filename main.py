@@ -54,14 +54,15 @@ def update_heap(heap, element):
         elt[1] -= element[1]
 
 def separate_point_visited_and_not_visited(G : list, visited_vertices : list, coords : list) -> None:
+    print("New turn")
     visited_coords = []
     not_visited_coords = []
     for vertice in visited_vertices:
+        print(vertice)
         visited_coords.append(coords[int(vertice[1])])
     for c in coords:
         if c not in visited_coords:
             not_visited_coords.append(c)
-    print(visited_coords)
     return visited_coords, not_visited_coords
 
 def two_random_points(vertice : int, G : list, target_robots : list, visited_vertices : list):
@@ -76,16 +77,6 @@ def two_random_points(vertice : int, G : list, target_robots : list, visited_ver
     return results
 
 def viewer(G : list, coords : list, memory_visited_vertices : list = None) -> None:
-    # visited_coords_x = np.array(visited_coords).T[0][:]
-    # visited_coords_y = np.array(visited_coords).T[1][:]
-    # not_visited_coords_x = np.array(not_visited_coords).T[0][:]
-    # not_visited_coords_y = np.array(not_visited_coords).T[1][:]
-    #plt.scatter(np.array(coords).T[0][:], np.array(coords).T[1][:])
-
-    # Génération de l'animation, frames précise les arguments numérique reçus par func (ici animate), 
-    # interval est la durée d'une image en ms, blit gère la mise à jour
-    #ani = animation.FuncAnimation(fig=fig, func=animate, frames=range(1), interval=50, blit=True)
-    #plt.show()
     fig = plt.figure()
     x, y = zip(*coords)
     plt.xlim(min(x)-2,max(x)+2)
@@ -93,8 +84,9 @@ def viewer(G : list, coords : list, memory_visited_vertices : list = None) -> No
     def animate(i):
         visited_coords, not_visited_coords = separate_point_visited_and_not_visited(G, memory_visited_vertices[i], coords)
         visited_coords_x, visited_coords_y = zip(*visited_coords)
-        not_visited_coords_x, not_visited_coords_y = zip(*not_visited_coords)
+        scat2 = []
         if not_visited_coords:
+            not_visited_coords_x, not_visited_coords_y = zip(*not_visited_coords)
             scat2 = plt.scatter(not_visited_coords_x, not_visited_coords_y, color="cyan")
         scat = plt.scatter(visited_coords_x, visited_coords_y, color="red")
         return scat, scat2
@@ -117,17 +109,13 @@ def algo_opti(G : list, coords : list):
     heapq.heappush(heap, close_vertice)
 
     while (len(visited_vertices) < len(G)):
-        print(visited_vertices)
         memory_of_visited_vertices.append(copy.deepcopy(visited_vertices))
         heap = sorted(heap, key = lambda x: x[1])
-        print(heap)
         element = heapq.heappop(heap)
-        print(element)
         target_robots.remove(element[0])
         if not(element[0] in visited_vertices):
             visited_vertices.append(element[0])
         total_time += element[1]
-        update_heap(heap, element)
         close_vertice = get_closer_vertice(int(element[0][1:]), G, target_robots, visited_vertices)
         far_vertice = get_far_vertice(int(element[0][1:]), G, target_robots, visited_vertices)
         print(close_vertice)
@@ -139,13 +127,8 @@ def algo_opti(G : list, coords : list):
                 target_robots.append(far_vertice[0])
                 heapq.heappush(heap, far_vertice)
     
-    print(heap)
-    min_x = np.min(np.array(coords).T[0][:])
-    # if min_x < 0: 
-    #     for coord in coords:
-    #         print(coord)
-    #         coord[0] -= min_x
-
+    memory_of_visited_vertices.append(visited_vertices)
+    print(memory_of_visited_vertices)
     viewer(G, coords, memory_of_visited_vertices)
     print("sorted vertices")
     print(sorted(visited_vertices))
