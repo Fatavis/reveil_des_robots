@@ -173,6 +173,7 @@ def algo(adjacentList,coords):
     time=0
     memory_visited_vertices=[["R0"]]
     loopCount=0
+    totalDist=0
     while ((((stack!=[]) | (avaliableRobots!=[])) | (time==0)) & (not equalSet(visitedVertices,[i for i in range(len(adjacentList))]))) :
         dup=extractDuplicates(avaliableRobots)
         print("dup",dup)
@@ -187,6 +188,7 @@ def algo(adjacentList,coords):
                 ongoingVertices+=[closest]
                 print("Cdist",closest,dist)
                 sentClosest+=[avaliableRobots[i]]
+                totalDist+=dist
             elif avaliableRobots[i] in dup:
                 print("Furthest")
                 furthest,dist = furthestVertice(avaliableRobots[i],adjacentList,visitedVertices+ongoingVertices)
@@ -195,6 +197,7 @@ def algo(adjacentList,coords):
                 print("Fdist",furthest,dist)
                 stack+=[[avaliableRobots[i],furthest,dist]]
                 ongoingVertices+=[furthest]
+                totalDist+=dist
         stack=stackSortAscending(stack)
         print("Sorted",stack)
         avaliableRobots=2*[stack[0][1]]
@@ -208,8 +211,8 @@ def algo(adjacentList,coords):
         memory_visited_vertices+=[intListToString(visitedVertices)]
         loopCount+=1
     # print(memory_visited_vertices)
-    # viewer(copyAdj,coords,memory_visited_vertices)
-    return time,loopCount
+    viewer(copyAdj,coords,memory_visited_vertices)
+    return time,loopCount,totalDist
 
 def travelling(verticeStart,verticeEnd,adjacentList,prev):
     travelling=[verticeEnd]
@@ -238,6 +241,7 @@ def algoImproved(adjacentList,coords):
     time=0
     memory_visited_vertices=[["R0"]]
     loopCount=0
+    totalDist=0
     while ((((stack!=[]) | (avaliableRobots!=[])) | (time==0)) & (not equalSet(visitedVertices,[i for i in range(len(adjacentList))]))) :
         dup=extractDuplicates(avaliableRobots)
         print("dup",dup)
@@ -252,6 +256,7 @@ def algoImproved(adjacentList,coords):
                 ongoingVertices+=[closest]
                 print("Cdist",closest,dist)
                 sentClosest+=[avaliableRobots[i]]
+                totalDist+=dist
             elif avaliableRobots[i] in dup:
                 print("Furthest")
                 furthest,dist = furthestVertice(avaliableRobots[i],adjacentList,visitedVertices+ongoingVertices)
@@ -262,6 +267,7 @@ def algoImproved(adjacentList,coords):
                 for j in range(len(travel)-1):
                     stack+=[[travel[j],travel[j+1],travDist[j+1]]]
                 ongoingVertices+=[furthest]
+                totalDist+=travDist[len(travDist)-1]
         stack=stackSortAscending(stack)
         print("Sorted",stack)
         avaliableRobots=2*[stack[0][1]]
@@ -277,9 +283,10 @@ def algoImproved(adjacentList,coords):
         loopCount+=1
     print(memory_visited_vertices)
     viewer(copyAdj,coords,memory_visited_vertices)
-    return time,loopCount
+    return time,loopCount,totalDist
 
 print(algoImproved(encode(50,"./bigtest.txt")[0],encode(50,"./bigtest.txt")[1]))
+print(algo(encode(50,"./bigtest.txt")[0],encode(50,"./bigtest.txt")[1]))
 # viewer(encode(50,"./bigtest.txt")[0],encode(50,"./bigtest.txt")[1],[["R0"],["R0","R5"]])
 
 
