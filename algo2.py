@@ -4,10 +4,11 @@ from time import sleep
 from viewer import *
 
 def strListToInt(adjacentList):
+    newAdj=[[] for i in range(len(adjacentList))]
     for i in range(len(adjacentList)):
         for j in range(len(adjacentList[i])):
-            adjacentList[i][j][0]=int(adjacentList[i][j][0][1::])
-    return adjacentList
+            newAdj[i]+=[[int(adjacentList[i][j][0][1::]),adjacentList[i][j][1]]]
+    return newAdj
 
 def intListToString(list):
     newlist=[]
