@@ -1,7 +1,7 @@
 from encode import *
 import numpy as np
 from time import sleep
-from main import viewer
+from viewer import *
 
 def strListToInt(adjacentList):
     for i in range(len(adjacentList)):
@@ -172,47 +172,45 @@ def algo(adjacentList,coords):
     avaliableRobots=[0]
     time=0
     memory_visited_vertices=[["R0"]]
-    loopCount=0
     totalDist=0
     while ((((stack!=[]) | (avaliableRobots!=[])) | (time==0)) & (not equalSet(visitedVertices,[i for i in range(len(adjacentList))]))) :
         dup=extractDuplicates(avaliableRobots)
-        print("dup",dup)
+        #print("dup",dup)
         sentClosest=[]
         for i in range(len(avaliableRobots)):
             if avaliableRobots[i] not in sentClosest :
-                print("Closest")
+                #print("Closest")
                 closest,dist = closestVertice(avaliableRobots[i],adjacentList,visitedVertices+ongoingVertices)
                 if (closest==-1):
                     continue
                 stack+=[[avaliableRobots[i],closest,dist]]
                 ongoingVertices+=[closest]
-                print("Cdist",closest,dist)
+                #print("Cdist",closest,dist)
                 sentClosest+=[avaliableRobots[i]]
                 totalDist+=dist
             elif avaliableRobots[i] in dup:
-                print("Furthest")
+                #print("Furthest")
                 furthest,dist = furthestVertice(avaliableRobots[i],adjacentList,visitedVertices+ongoingVertices)
                 if (furthest==-1):
                     continue
-                print("Fdist",furthest,dist)
+                #print("Fdist",furthest,dist)
                 stack+=[[avaliableRobots[i],furthest,dist]]
                 ongoingVertices+=[furthest]
                 totalDist+=dist
         stack=stackSortAscending(stack)
-        print("Sorted",stack)
+        #print("Sorted",stack)
         avaliableRobots=2*[stack[0][1]]
-        print("Avaliable",avaliableRobots)
+        #print("Avaliable",avaliableRobots)
         time+=stack[0][2]
         visitedVertices+=[stack[0][1]]
-        print("Visited",visitedVertices)
+        #print("Visited",visitedVertices)
         ongoingVertices=removeFrom(ongoingVertices,stack[0][1],True)
         stack=stackMapSub(stack,stack[0][2])[1::]
-        print('newStack',stack)
+        #print('newStack',stack)
         memory_visited_vertices+=[intListToString(visitedVertices)]
-        loopCount+=1
     # print(memory_visited_vertices)
     viewer(copyAdj,coords,memory_visited_vertices)
-    return time,loopCount,totalDist
+    return time,totalDist
 
 def travelling(verticeStart,verticeEnd,adjacentList,prev):
     travelling=[verticeEnd]
@@ -227,7 +225,7 @@ def travelling(verticeStart,verticeEnd,adjacentList,prev):
         dist+=[totalDist]
     return travelling,dist
 
-print(travelling(3,4,strListToInt(encode(1050,"./test.txt")[0]),djikstra(3,strListToInt(encode(1050,"./test.txt")[0]))[1]))
+#print(travelling(3,4,strListToInt(encode(1050,"./test.txt")[0]),djikstra(3,strListToInt(encode(1050,"./test.txt")[0]))[1]))
 
 
 def algoImproved(adjacentList,coords):
@@ -240,54 +238,62 @@ def algoImproved(adjacentList,coords):
     avaliableRobots=[0]
     time=0
     memory_visited_vertices=[["R0"]]
-    loopCount=0
     totalDist=0
     while ((((stack!=[]) | (avaliableRobots!=[])) | (time==0)) & (not equalSet(visitedVertices,[i for i in range(len(adjacentList))]))) :
         dup=extractDuplicates(avaliableRobots)
-        print("dup",dup)
+        #print("dup",dup)
         sentClosest=[]
         for i in range(len(avaliableRobots)):
             if avaliableRobots[i] not in sentClosest :
-                print("Closest")
+                #print("Closest")
                 closest,dist = closestVertice(avaliableRobots[i],adjacentList,visitedVertices+ongoingVertices)
                 if (closest==-1):
                     continue
                 stack+=[[avaliableRobots[i],closest,dist]]
                 ongoingVertices+=[closest]
-                print("Cdist",closest,dist)
+                #print("Cdist",closest,dist)
                 sentClosest+=[avaliableRobots[i]]
                 totalDist+=dist
             elif avaliableRobots[i] in dup:
-                print("Furthest")
+                #print("Furthest")
                 furthest,dist = furthestVertice(avaliableRobots[i],adjacentList,visitedVertices+ongoingVertices)
                 if (furthest==-1):
                     continue
-                print("Fdist",furthest,dist)
+                #print("Fdist",furthest,dist)
                 travel,travDist=travelling(avaliableRobots[i],furthest,adjacentList,djikstra(avaliableRobots[i],adjacentList)[1])
                 for j in range(len(travel)-1):
                     stack+=[[travel[j],travel[j+1],travDist[j+1]]]
                 ongoingVertices+=[furthest]
                 totalDist+=travDist[len(travDist)-1]
         stack=stackSortAscending(stack)
-        print("Sorted",stack)
+        #print("Sorted",stack)
         avaliableRobots=2*[stack[0][1]]
-        print("Avaliable",avaliableRobots)
+        #print("Avaliable",avaliableRobots)
         time+=stack[0][2]
         if (stack[0][1] not in visitedVertices):
             visitedVertices+=[stack[0][1]]
-        print("Visited",visitedVertices)
+        #print("Visited",visitedVertices)
         ongoingVertices=removeFrom(ongoingVertices,stack[0][1],True)
         stack=stackMapSub(stack,stack[0][2])[1::]
-        print('newStack',stack)
+        #print('newStack',stack)
         memory_visited_vertices+=[intListToString(visitedVertices)]
-        loopCount+=1
-    print(memory_visited_vertices)
+    #print(memory_visited_vertices)
     viewer(copyAdj,coords,memory_visited_vertices)
-    return time,loopCount,totalDist
+    return time,totalDist
 
-print(algoImproved(encode(50,"./bigtest.txt")[0],encode(50,"./bigtest.txt")[1]))
-print(algo(encode(50,"./bigtest.txt")[0],encode(50,"./bigtest.txt")[1]))
-# viewer(encode(50,"./bigtest.txt")[0],encode(50,"./bigtest.txt")[1],[["R0"],["R0","R5"]])
+if __name__ == '__main__':
+    #Example
+    A = [["R1", 1], ["R2", 1], ["R3", 1], ["R4", 100]]
+    B = [["R0", 1], ["R2", np.sqrt(2)], ["R3", 2], ["R4", 100]] #value of c bug for 4
+    C = [["R0", 1], ["R1", np.sqrt(2)], ["R3", np.sqrt(2)], ["R4", 101]]
+    D = [["R0", 1], ["R1", 2], ["R2", np.sqrt(2)], ["R4", 1000]]
+    E = [["R0", 100], ["R1", 100], ["R2", 101], ["R3", 100]]
+
+    G = [A, B, C, D, E]
+
+    coords = [[0, 0], [0, 1], [-1, 0], [0, -1], [100, 0]]
+    algo(G, coords)
+    algoImproved(G, coords)
 
 
 
