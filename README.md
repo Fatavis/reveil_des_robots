@@ -1,5 +1,7 @@
 # Réveil des robots
 
+Projet scolaire de première année à l'ENSEIRB-MATMECA dans le cadre du cours : Algorithme des graphes.
+
 Pour tester les différents algorithmes : 
 ```python3 main.py```
 
